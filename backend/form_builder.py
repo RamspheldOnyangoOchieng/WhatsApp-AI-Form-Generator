@@ -13,9 +13,10 @@ def generate_form_schema(prompt):
         raw_text = response.text.strip()
         print("🔍 Gemini raw response:", raw_text)  # Log the raw response for debugging
         json_start = raw_text.find('{')
-        if json_start == -1:
-            raise ValueError("No JSON object found in the response")
-        schema = json.loads(raw_text[json_start:])
+        json_end = raw_text.rfind('}') + 1
+        if json_start == -1 or json_end == 0:
+            raise ValueError("No valid JSON object found in the response")
+        schema = json.loads(raw_text[json_start:json_end])
         return {"form_id": str(uuid.uuid4())[:8], "schema": schema}
     except json.JSONDecodeError as e:
         print("❌ JSON Decode Error:", e)
