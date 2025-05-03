@@ -1,10 +1,10 @@
 export async function fetchFormSchema(id) {
   try {
-    const res = await fetch(`https://yourdomain.com/api/form/${id}`);
-    if (!res.ok) throw new Error("Failed to fetch form");
+    const res = await fetch(`https://whatsapp-ai-form-generator.onrender.com/api/form/${id}`);
+    if (!res.ok) throw new Error("Form fetch failed");
     return await res.json();
-  } catch (err) {
-    console.error("❌ Error fetching form schema:", err);
+  } catch (e) {
+    console.error("❌ Error:", e);
     return null;
   }
 }

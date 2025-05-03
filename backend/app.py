@@ -1,23 +1,12 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from twilio.twiml.messaging_response import MessagingResponse
 from dotenv import load_dotenv
-import os
-from flask import render_template, send_from_directory
-import json
-from flask_cors import CORS
-
-
-# Load environment variables
-load_dotenv()
-
-print(f"🧪 Loaded GEMINI API Key: {os.getenv('GEMINI_API_KEY')[:8]}...")
-
-# Local import after loading env to ensure access to API key
 from backend.form_builder import generate_form_schema
+from backend.supabase_client import save_form_schema, get_form_schema
+import os
 
+load_dotenv()
 app = Flask(__name__)
-CORS(app)
-
 
 @app.route('/whatsapp', methods=['POST'])
 def whatsapp():
@@ -28,28 +17,24 @@ def whatsapp():
     msg = resp.message()
 
     if schema:
-        form_link = f"https://yourdomain.com/form/{schema['form_id']}"
+        save_form_schema(schema['form_id'], schema['schema'])
+        form_link = f"https://whatsapp-ai-form-generator.onrender.com/form/{schema['form_id']}"
         msg.body(f"✅ Your form is ready: {form_link}")
     else:
-        msg.body("❌ Sorry, I couldn't generate your form right now. Please try again later.")
+        msg.body("❌ Sorry, I couldn't generate your form.")
 
     return str(resp)
 
 @app.route('/api/form/<form_id>', methods=['GET'])
-def get_form_schema(form_id):
-    try:
-        with open(f"forms/{form_id}.json", "r") as f:
-            schema = json.load(f)
-        return schema, 200
-    except FileNotFoundError:
-        return {"error": "Form not found"}, 404
-
+def get_form(form_id):
+    schema = get_form_schema(form_id)
+    if schema:
+        return jsonify(schema)
+    return jsonify({"error": "Form not found"}), 404
 
 @app.route('/status', methods=['POST'])
 def status():
-    message_status = request.form.get('MessageStatus')
-    message_sid = request.form.get('MessageSid')
-    print(f"Message SID: {message_sid}, Status: {message_status}")
+    print(f"Message SID: {request.form.get('MessageSid')}, Status: {request.form.get('MessageStatus')}")
     return '', 200
 
 if __name__ == '__main__':
