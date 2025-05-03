@@ -12,7 +12,7 @@ client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 def generate_form_schema(prompt):
     try:
         response = client.chat.completions.create(
-            model="gpt-4-turbo",
+            model="gpt-4-1",
             messages=[
                 {"role": "system", "content": "You are an assistant that generates JSON form schemas."},
                 {"role": "user", "content": f"Create a JSON form schema for: {prompt}"}
