@@ -12,7 +12,7 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 print(f"🧪 Loaded API Key: {os.getenv('OPENAI_API_KEY')}")
 
 # Local import after loading env to ensure access to API key
-from form_builder import generate_form_schema
+from backend.form_builder import generate_form_schema
 
 app = Flask(__name__)
 
