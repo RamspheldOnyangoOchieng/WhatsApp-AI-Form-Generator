@@ -1,4 +1,5 @@
 import os, json, uuid
+import re
 from dotenv import load_dotenv
 import google.generativeai as genai
 
@@ -12,6 +13,10 @@ def generate_form_schema(prompt):
         response = model.generate_content(f"Create a JSON form schema with fields and types for: {prompt}")
         raw_text = response.text.strip()
         print("🔍 Gemini raw response:", raw_text)  # Log the raw response for debugging
+
+        # Remove comments from the JSON response
+        raw_text = re.sub(r'//.*', '', raw_text)
+
         json_start = raw_text.find('{')
         json_end = raw_text.rfind('}') + 1
         if json_start == -1 or json_end == 0:
