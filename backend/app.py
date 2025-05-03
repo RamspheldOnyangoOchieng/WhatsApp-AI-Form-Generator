@@ -11,15 +11,23 @@ app = Flask(__name__)
 @app.route('/whatsapp', methods=['POST'])
 def whatsapp():
     incoming_msg = request.form.get('Body')
+    print(f"🔍 Incoming message: {incoming_msg}")  # Log the incoming message
+
     schema = generate_form_schema(incoming_msg)
+    print(f"🔍 Generated schema: {schema}")  # Log the generated schema
 
     resp = MessagingResponse()
     msg = resp.message()
 
     if schema:
-        save_form_schema(schema['form_id'], schema['schema'])
-        form_link = f"https://whatsapp-ai-form-generator.onrender.com/form/{schema['form_id']}"
-        msg.body(f"✅ Your form is ready: {form_link}")
+        try:
+            save_form_schema(schema['form_id'], schema['schema'])
+            print(f"✅ Form {schema['form_id']} saved successfully.")  # Log successful save
+            form_link = f"https://whatsapp-ai-form-generator.onrender.com/form/{schema['form_id']}"
+            msg.body(f"✅ Your form is ready: {form_link}")
+        except Exception as e:
+            print(f"❌ Error saving form: {e}")  # Log any save errors
+            msg.body("❌ Sorry, there was an error saving your form.")
     else:
         msg.body("❌ Sorry, I couldn't generate your form.")
 
