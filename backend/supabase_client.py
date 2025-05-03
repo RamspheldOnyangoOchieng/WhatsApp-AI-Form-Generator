@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 supabase_url = os.getenv("SUPABASE_URL")
-supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+supabase_key = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(supabase_url, supabase_key)
 
 def save_form_schema(form_id, schema):
