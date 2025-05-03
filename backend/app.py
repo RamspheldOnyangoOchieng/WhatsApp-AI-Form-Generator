@@ -35,7 +35,8 @@ def get_form(form_id):
 @app.route('/form/<form_id>', methods=['GET'])
 def form_page(form_id):
     # Redirect to the React frontend to display the form
-    return redirect(f"/form/{form_id}")
+    frontend_base_url = "https://whatsapp-ai-form-generator-frontend.onrender.com"
+    return redirect(f"{frontend_base_url}/form/{form_id}")
 
 @app.route('/status', methods=['POST'])
 def status():
