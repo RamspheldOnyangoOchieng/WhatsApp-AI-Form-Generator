@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, redirect
 from twilio.twiml.messaging_response import MessagingResponse
 from dotenv import load_dotenv
 from backend.form_builder import generate_form_schema
@@ -31,6 +31,11 @@ def get_form(form_id):
     if schema:
         return jsonify(schema)
     return jsonify({"error": "Form not found"}), 404
+
+@app.route('/form/<form_id>', methods=['GET'])
+def form_page(form_id):
+    # Redirect to the React frontend to display the form
+    return redirect(f"/form/{form_id}")
 
 @app.route('/status', methods=['POST'])
 def status():
