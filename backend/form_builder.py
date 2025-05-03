@@ -14,9 +14,10 @@ def generate_form_schema(prompt):
         raw_text = response.text.strip()
         print("🔍 Gemini raw response:", raw_text)  # Log the raw response for debugging
 
-        # Remove comments and sanitize invalid control characters
+        # Clean and validate the JSON response
         raw_text = re.sub(r'//.*', '', raw_text)  # Remove comments
         raw_text = raw_text.replace('\n', '').replace('\r', '').replace('\t', '')  # Remove control characters
+        raw_text = raw_text.replace("'", '"')  # Replace single quotes with double quotes
 
         json_start = raw_text.find('{')
         json_end = raw_text.rfind('}') + 1
