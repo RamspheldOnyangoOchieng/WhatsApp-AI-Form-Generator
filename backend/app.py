@@ -2,14 +2,11 @@ from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 from dotenv import load_dotenv
 import os
-import openai
 
 # Load environment variables
 load_dotenv()
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
-print(f"🧪 Loaded API Key: {os.getenv('OPENAI_API_KEY')}")
+print(f"🧪 Loaded GEMINI API Key: {os.getenv('GEMINI_API_KEY')[:8]}...")
 
 # Local import after loading env to ensure access to API key
 from backend.form_builder import generate_form_schema
@@ -40,6 +37,4 @@ def status():
     return '', 200
 
 if __name__ == '__main__':
-
-    print(f"✅ Using OpenAI API Key: {os.getenv('OPENAI_API_KEY')[:8]}...")  # Show only first chars for safety
     app.run(debug=True)
