@@ -4,4 +4,4 @@ openai
 python-dotenv
 gunicorn
 google-generativeai
-
+flask-cors
