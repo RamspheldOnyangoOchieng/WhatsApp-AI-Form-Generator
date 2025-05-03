@@ -18,12 +18,17 @@ def generate_form_schema(prompt):
         raw_text = re.sub(r'//.*', '', raw_text)  # Remove comments
         raw_text = raw_text.replace('\n', '').replace('\r', '').replace('\t', '')  # Remove control characters
         raw_text = raw_text.replace("'", '"')  # Replace single quotes with double quotes
+        raw_text = re.sub(r'\s+', ' ', raw_text)  # Normalize whitespace
 
         json_start = raw_text.find('{')
         json_end = raw_text.rfind('}') + 1
         if json_start == -1 or json_end == 0:
             raise ValueError("No valid JSON object found in the response")
-        schema = json.loads(raw_text[json_start:json_end])
+
+        cleaned_json = raw_text[json_start:json_end]
+        print("🔍 Cleaned JSON:", cleaned_json)  # Log the cleaned JSON
+
+        schema = json.loads(cleaned_json)
         return {"form_id": str(uuid.uuid4())[:8], "schema": schema}
     except json.JSONDecodeError as e:
         print("❌ JSON Decode Error:", e)
