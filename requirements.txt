@@ -3,3 +3,5 @@ twilio
 openai
 python-dotenv
 gunicorn
+google-generativeai
+
