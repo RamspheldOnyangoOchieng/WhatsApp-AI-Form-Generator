@@ -8,6 +8,30 @@ import os
 load_dotenv()
 app = Flask(__name__)
 
+def save_form_as_html(form_id, schema):
+    try:
+        forms_dir = os.path.join(os.getcwd(), 'forms')
+        os.makedirs(forms_dir, exist_ok=True)  # Ensure the forms/ directory exists
+
+        form_path = os.path.join(forms_dir, f"{form_id}.html")
+        with open(form_path, 'w') as form_file:
+            form_file.write(f"<html><head><title>{schema.get('title', 'Form')}</title></head><body>")
+            form_file.write(f"<h1>{schema.get('title', 'Form')}</h1>")
+            form_file.write(f"<p>{schema.get('description', '')}</p>")
+            form_file.write("<form>")
+
+            for field_name, field_props in schema.get('properties', {}).items():
+                form_file.write(f"<label>{field_props.get('title', field_name)}</label><br>")
+                input_type = 'text' if field_props.get('type') == 'string' else field_props.get('type', 'text')
+                form_file.write(f"<input type='{input_type}' name='{field_name}'><br><br>")
+
+            form_file.write("<button type='submit'>Submit</button>")
+            form_file.write("</form></body></html>")
+
+        print(f"✅ Form saved as HTML: {form_path}")
+    except Exception as e:
+        print(f"❌ Error saving form as HTML: {e}")
+
 @app.route('/whatsapp', methods=['POST'])
 def whatsapp():
     incoming_msg = request.form.get('Body')
@@ -22,6 +46,7 @@ def whatsapp():
     if schema:
         try:
             save_form_schema(schema['form_id'], schema['schema'])
+            save_form_as_html(schema['form_id'], schema['schema'])  # Save the form as an HTML file
             print(f"✅ Form {schema['form_id']} saved successfully.")  # Log successful save
             form_link = f"https://whatsapp-ai-form-generator.onrender.com/form/{schema['form_id']}"
             msg.body(f"✅ Your form is ready: {form_link}")
