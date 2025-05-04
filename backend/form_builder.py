@@ -18,7 +18,8 @@ def generate_form_schema(prompt):
         raw_text = re.sub(r'//.*', '', raw_text)  # Remove comments
         raw_text = raw_text.replace('\n', '').replace('\r', '').replace('\t', '')  # Remove control characters
         raw_text = raw_text.replace("'", '"')  # Replace single quotes with double quotes
-        raw_text = re.sub(r'\s+', ' ', raw_text)  # Normalize whitespace
+        raw_text = re.sub(r',\s*}', '}', raw_text)  # Remove trailing commas before closing braces
+        raw_text = re.sub(r',\s*]', ']', raw_text)  # Remove trailing commas before closing brackets
 
         json_start = raw_text.find('{')
         json_end = raw_text.rfind('}') + 1
