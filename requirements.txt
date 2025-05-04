@@ -6,4 +6,5 @@ gunicorn
 google-generativeai
 flask-cors
 supabase
+requests
 
