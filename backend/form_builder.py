@@ -20,6 +20,7 @@ def generate_form_schema(prompt):
         raw_text = raw_text.replace("'", '"')  # Replace single quotes with double quotes
         raw_text = re.sub(r',\s*}', '}', raw_text)  # Remove trailing commas before closing braces
         raw_text = re.sub(r',\s*]', ']', raw_text)  # Remove trailing commas before closing brackets
+        raw_text = re.sub(r'"(.*?)"', lambda m: m.group(0).replace('"', '\"'), raw_text)  # Escape double quotes within strings
 
         json_start = raw_text.find('{')
         json_end = raw_text.rfind('}') + 1
